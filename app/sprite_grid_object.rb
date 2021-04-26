@@ -31,7 +31,7 @@ class Sprite_Grid_Object < Grid_Object
         { x: @x, y: @y, w: @w, h: @h, path: @path, x_offset: @x_offset,
         y_offset: @y_offset, w_offset: @w_offset, h_offset: @h_offset,
         source_x: @source_x, source_y: @source_y, source_w: @source_w,
-        source_h: @source_h  }
+        source_h: @source_h, col: @col, row: @row  }
     end
 
 

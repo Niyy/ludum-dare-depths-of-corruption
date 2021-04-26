@@ -8,6 +8,14 @@ class Grid_Object
     end
 
 
+    def set_everything_from_tile(tile)
+        set_to_coord(tile)
+
+        @col = tile[:col]
+        @row = tile[:row]
+    end
+
+
     def set_to_coord(tile)
         position = tile_to_coord(tile)
 
