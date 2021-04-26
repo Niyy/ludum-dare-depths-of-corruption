@@ -3,7 +3,7 @@ require 'app/Sprite_Grid_Object.rb'
 
 
 class Tile < Sprite_Grid_Object
-    attr_accessor :binary, :marked, :is_grounded_level, :cost
+    attr_accessor :binary, :marked, :is_grounded_level, :paths, :cost
 
 
     def initialize(init_args)

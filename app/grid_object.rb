@@ -76,6 +76,11 @@ class Grid_Object
     end
 
 
+    def get_coord_base_on_tile()
+        return {x: @col * 32, y: @row * 32}
+    end
+
+
     def get_coord_position()
         return {x: @x, y: @y}
     end

@@ -24,6 +24,14 @@ class Sprite_Grid_Object < Grid_Object
         @source_h = init_args[:source_h] != nil ? init_args[:source_h] : nil 
     end
 
+    # override
+    def set_to_coord(tile)
+        position = tile_to_coord(tile)
+
+        @x = position[:x] + @x_offset
+        @y = position[:y] + @y_offset
+    end
+
 
     # 1. Create a serialize method that returns a hash with all of
     #    the values you care about.

@@ -5,7 +5,8 @@ require 'app/Sprite_Grid_Object.rb'
 class Actor < Sprite_Grid_Object
     attr_accessor :selected, :attack_target, :move_target, :current_path, :open_list,
     :info, :closed, :parents, :working_out_path, :current_search, :health, :speed,
-    :strength, :speed_build_up, :type, :base_health, :base_speed, :base_strength
+    :strength, :speed_build_up, :type, :base_health, :base_speed, :base_strength,
+    :start_animation, :animation_increment
 
 
     def initialize(init_args)
@@ -14,6 +15,7 @@ class Actor < Sprite_Grid_Object
         @attack_target = nil
         @move_target = nil
         @current_search = nil
+        @start_animation = nil
         @current_path = [] 
         @open_list = []
         @info = {}
@@ -24,8 +26,25 @@ class Actor < Sprite_Grid_Object
         @health = @base_health = init_args[:health] != nil ? init_args[:health] : 100
         @speed = @base_speed = init_args[:speed] != nil ? init_args[:speed] : 20
         @strength = @base_strength = init_args[:strength] != nil ? init_args[:strength] : 
-            (0..5).to_a
+            (5..20).to_a
         @speed_build_up = 0 
+    end
+
+
+    def clear()
+        @working_out_path = false 
+        @attack_target = nil
+        @move_target = nil
+        @current_search = nil
+        @start_animation = nil
+        @current_path = [] 
+        @open_list = []
+        @info = {}
+        @closed = {} 
+        @parents = {}
+        @max_path_interval = 1
+        @speed_build_up = 0
+        @attack_target = nil
     end
 
 
@@ -69,7 +88,12 @@ class Actor < Sprite_Grid_Object
 
 
     def damage(damage)
+        puts "ARgh. That hurt. #{@type}"
         @health -= damage
+
+        if(@health <= 0)
+            return true
+        end
     end
 
 
@@ -107,6 +131,7 @@ class Actor < Sprite_Grid_Object
 
 
     def a_sharp(grid, units, target)
+
         interval = 0 
         start = grid[@row][@col]
         @move_target = target
@@ -280,6 +305,33 @@ class Actor < Sprite_Grid_Object
             if(units[tile.get_tile_position] == nil)
                 @move_target = tile
             end
+        end
+    end
+
+
+    def attack_your_target(args, grid, units)
+        if(@attack_target != nil)
+            if(@current_path.empty? && find_manhattan(@attack_target) > 1)
+                find_move_target(grid, units)
+                find_path_to_target(grid, units, @attack_target.get_tile_position)
+            elsif(find_manhattan(@attack_target) <= 1)
+                @current_path = []
+
+                if(@attack_target.health <= 0)
+                    @attack_target = nil 
+                end
+                if(@speed_build_up >= @speed)
+                    if(@attack_target == nil || @attack_target.damage(@strength.sample()))
+                        @attack_target = nil
+                    end
+
+                    @speed_build_up = 0
+                end
+            end
+        end
+
+        if(@speed_build_up <= @speed && args.state.tick_count % 10 == 0)
+            @speed_build_up += 1
         end
     end
 

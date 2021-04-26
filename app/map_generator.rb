@@ -4,6 +4,10 @@ require 'app/tile.rb'
 def generate(dim, pillar_density = 0, pillar_count = 0)
     door_in = [0, 1, 2, 3].sample()
     door_out = [0, 1, 2, 3].sample()
+    center_offset = {x_offset: ((1280 - (dim[:w] * 32)) / 2),
+        y_offset: ((720 - (dim[:h] * 32)) / 2) 
+    }
+    puts center_offset
     grid = {}
 
     (0..dim[:h]).each do |h|
@@ -14,6 +18,8 @@ def generate(dim, pillar_density = 0, pillar_count = 0)
                 row: h,
                 w: 32,
                 h: 32,
+                x_offset: center_offset[:x_offset],
+                y_offset: center_offset[:y_offset],
                 path: "sprites/floor.png"
             })
 
@@ -31,26 +37,26 @@ def generate(dim, pillar_density = 0, pillar_count = 0)
     when 0
         door_in = grid[0].
             values.
-            slice(1...dim[:w]).
+            slice(2...dim[:w] - 1).
             sample()
         door_in.path = "sprites/floor.png"
         door_in.marked = -1
     when 1
         door_in = grid[0].
             values.
-            slice(1...dim[:w])
+            slice(2...dim[:w] - 1)
             .sample()
         door_in.path = "sprites/floor.png"
         door_in.marked = -1
     when 2
         door_in = grid.values.
-            slice(1...dim[:h]).
+            slice(2...dim[:h] - 1).
             sample()[0]
         door_in.path = "sprites/floor.png"
         door_in.marked = -1
     when 3
         door_in = grid.values.
-            slice(1...dim[:h]).
+            slice(2...dim[:h] - 1).
             sample()[dim[:w]]
         door_in.path = "sprites/floor.png"
         door_in.marked = -1
